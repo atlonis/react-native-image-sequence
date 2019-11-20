@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "native modules for handling image sequence animations. (created because i had performance issues with a javascript only solution like: https://github.com/remobile/react-native-image-animation)",
   "main": "index.js",
+  "_location": "/react-native-img-sequence",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
