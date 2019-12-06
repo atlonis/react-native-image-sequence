@@ -22,6 +22,7 @@
 
     for (NSUInteger index = 0; index < images.count; index++) {
         NSDictionary *item = images[index];
+        NSTimeInterval duration = images.count * (1.0f / _framesPerSecond);
 
         #ifdef DEBUG
         NSString *url = item[@"uri"];
