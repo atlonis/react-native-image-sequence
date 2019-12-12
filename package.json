@@ -1,6 +1,6 @@
 {
   "name": "react-native-img-sequence",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "native modules for handling image sequence animations. (created because i had performance issues with a javascript only solution like: https://github.com/remobile/react-native-image-animation)",
   "main": "index.js",
   "_location": "/react-native-img-sequence",
