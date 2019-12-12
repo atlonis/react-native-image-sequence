@@ -22,7 +22,6 @@
 
     for (NSUInteger index = 0; index < images.count; index++) {
         NSDictionary *item = images[index];
-        NSTimeInterval duration = images.count * (1.0f / _framesPerSecond);
 
         #ifdef DEBUG
         NSString *url = item[@"uri"];
@@ -30,14 +29,12 @@
         NSString *url = [NSString stringWithFormat:@"file://%@", item[@"uri"]]; // when not in debug, the paths are "local paths" (because resources are bundled in app)
         #endif
 
-        if (_loop == false && images.count > 0) {
-            UIImage * lastFrameImage = images.lastObject;
-                __weak RCTImageSequenceView *weakSelf = self;
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    [weakSelf stopAnimating];
-                    [weakSelf setImage: lastFrameImage];
-                });
-        }
+        dispatch_async(dispatch_queue_create("dk.mads-lee.ImageSequence.Downloader", NULL), ^{
+            UIImage *image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:url]]];
+            dispatch_async(dispatch_get_main_queue(), ^{
+              [weakSelf onImageLoadTaskAtIndex:index image:image];
+            });
+        });
 
         _activeTasks[@(index)] = url;
     }
@@ -77,8 +74,9 @@
     if (_loop == false && images.count > 0) {
     UIImage * lastFrameImage = images.lastObject;
         __weak RCTImageSequenceView *weakSelf = self;
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration)), dispatch_get_main_queue(), ^{
-            weakSelf.image = lastFrameImage;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [weakSelf stopAnimating];
+            [weakSelf setImage: lastFrameImage];
         });
     }
 }
